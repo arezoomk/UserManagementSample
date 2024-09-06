@@ -19,7 +19,7 @@ namespace DataLayer
 
         public async Task<User?> GetUserByUsernameAsync(string username)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username.ToLower());
         }
 
         public async Task<User?> GetUserByIdAsync(int id)
