@@ -30,7 +30,7 @@ namespace DataLayer
 
         public async Task<List<User>> GetAllUsersByUsernameAsync(string username)
         {
-            return await _context.Users.Where(u => u.Username .StartsWith(username)).ToListAsync();
+            return await _context.Users.Where(u => u.Username .StartsWith(username.ToLower())).ToListAsync();
         }
 
         public async Task<bool> AddAsync(User user)

@@ -19,12 +19,17 @@ namespace BusinessLayer
 
         public async Task< ServiceResult<bool>> RegisterUserAsync(string username, string password)
         {
+            if (!System.Text.RegularExpressions.Regex.IsMatch(username, @"^[a-zA-Z]+$"))
+            {
+                return ServiceResult<bool>.FailureResult("Username contains invalid characters. Only English letters are allowed.");
+            }
+
             if (await _userRepository.GetUserByUsernameAsync(username) != null)
             {
                 return ServiceResult<bool>.FailureResult("Username already exists.");
             }
 
-            var user = new User { Username = username, PasswordHash = HashConverter.SHA256(password) };
+            var user = new User { Username = username.ToLower(), PasswordHash = HashConverter.SHA256(password) };
             await _userRepository.AddAsync(user);
             return ServiceResult<bool>.SuccessResult(true, "Successfully registered.");
         }
