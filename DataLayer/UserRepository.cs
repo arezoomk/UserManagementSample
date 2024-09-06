@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,28 +17,28 @@ namespace DataLayer
             _context = context;
         }
 
-        public User? GetUserByUsername(string username)
+        public async Task<User?> GetUserByUsernameAsync(string username)
         {
-            return _context.Users.FirstOrDefault(u => u.Username == username);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 
-        public User? GetUserById(int id)
+        public async Task<User?> GetUserByIdAsync(int id)
         {
-            return _context.Users.FirstOrDefault(u => u.ID == id);
+            return await _context.Users.FirstOrDefaultAsync(u => u.ID == id);
         }
 
 
-        public List<User> GetAllUsersByUsername(string username)
+        public async Task<List<User>> GetAllUsersByUsernameAsync(string username)
         {
-            return _context.Users.Where(u => u.Username .StartsWith(username)).ToList();
+            return await _context.Users.Where(u => u.Username .StartsWith(username)).ToListAsync();
         }
 
-        public bool Add(User user)
+        public async Task<bool> AddAsync(User user)
         {
             try
             {
                 _context.Users.Add(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -46,12 +47,12 @@ namespace DataLayer
             }
         }
 
-        public bool Update(User user)
+        public async Task<bool> UpdateAsync(User user)
         {
             try
             {
                 _context.Users.Update(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
 
             }

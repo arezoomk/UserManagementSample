@@ -6,7 +6,7 @@ using System;
 
 class Program
 {
-    static void Main()
+  static async Task  Main()
     {
         using (var context = new UserContext())
         {
@@ -35,25 +35,25 @@ class Program
                     {
                         case "register":
                             {
-                                Register(parts, userService);
+                               await RegisterAsync(parts, userService);
                                 break;
                             }
 
                         case "login":
                             {
-                                Login(parts, userService);
+                                await LoginAsync(parts, userService);
                                 break;
                             }
 
                         case "change":
                             {
-                                ChangeStatus(parts, userService);
+                                await ChangeStatusAsync(parts, userService);
                                 break;
                             }
 
                         case "search":
                             {
-                                Search(parts, userService);
+                                await SearchAsync(parts, userService);
                                 break;
                             }
 
@@ -64,7 +64,7 @@ class Program
                             }
                         case "changepassword":
                             {
-                                ChangePassword(parts, userService);
+                                await ChangePasswordAsync(parts, userService);
                                 break;
                             }
 
@@ -94,7 +94,7 @@ class Program
         Console.WriteLine("Usage: changepassword --old <oldPassword> --new <newPassword>");
         Console.ForegroundColor = ConsoleColor.White;
     }
-    static void Register(string[] parts, IUserService userService)
+    static async Task RegisterAsync(string[] parts, IUserService userService)
     {
         if (parts.Length < 5)
         {
@@ -105,7 +105,7 @@ class Program
         }
         var username = parts[2];
         var password = parts[4];
-        var result = userService.RegisterUser(username, password);
+        var result =await userService.RegisterUserAsync(username, password);
         if (result.Success)
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -119,7 +119,7 @@ class Program
 
     }
 
-    static void Login(string[] parts, IUserService userService)
+    static async Task LoginAsync(string[] parts, IUserService userService)
     {
         if (parts.Length < 5)
         {
@@ -130,7 +130,7 @@ class Program
         }
         var username = parts[2];
         var password = parts[4];
-        var result = userService.Login(username, password);
+        var result =await userService.LoginAsync(username, password);
 
         if (result.Success)
         {
@@ -146,7 +146,7 @@ class Program
         Console.ForegroundColor = ConsoleColor.White;
     }
 
-    static void ChangeStatus(string[] parts, IUserService userService)
+    static async Task ChangeStatusAsync(string[] parts, IUserService userService)
     {
         if (parts.Length < 3)
         {
@@ -158,7 +158,7 @@ class Program
         var status = parts[2].ToLower();
         bool isAvailable = status == "available";
 
-        var result = userService.ChangeStatus(isAvailable);
+        var result =await userService.ChangeStatusAsync(isAvailable);
         if (result.Success)
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -171,7 +171,7 @@ class Program
         Console.ForegroundColor = ConsoleColor.White;
     }
 
-    static void Search(string[] parts, IUserService userService)
+    static async Task SearchAsync(string[] parts, IUserService userService)
     {
         if (parts.Length < 3)
         {
@@ -181,7 +181,7 @@ class Program
             return;
         }
         var usernamePrefix = parts[2];
-        var result = userService.GetAllUsersByUserName(usernamePrefix);
+        var result = await userService.GetAllUsersByUserNameAsync(usernamePrefix);
 
         if (result.Success)
         {
@@ -202,7 +202,7 @@ class Program
 
     static void Logout(IUserService userService)
     {
-        var result = userService.Logout();
+        var result =  userService.Logout();
         if (result.Success)
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -215,7 +215,7 @@ class Program
         Console.ForegroundColor = ConsoleColor.White;
     }
 
-    static void ChangePassword(string[] parts, IUserService userService)
+    static async Task ChangePasswordAsync(string[] parts, IUserService userService)
     {
         if (parts.Length < 5)
         {
@@ -226,7 +226,7 @@ class Program
         }
         var oldPassword = parts[2];
         var newPassword = parts[4];
-        var result = userService.ChangePassword(oldPassword, newPassword);
+        var result =await userService.ChangePasswordAsync(oldPassword, newPassword);
 
         if (result.Success)
         {

@@ -10,11 +10,11 @@ namespace BusinessLayer
 {
     public interface IUserService
     {
-        public ServiceResult<bool> ChangePassword(string oldPassword, string newPassword);
-        public ServiceResult<bool> RegisterUser(string username, string password);
-        public ServiceResult<bool> Logout();
-        public ServiceResult<bool> Login(string username, string password);
-        public ServiceResult<bool> ChangeStatus(bool isAvailable);
-        public ServiceResult<List<User>> GetAllUsersByUserName(string userName);
+        Task<ServiceResult<bool>> ChangePasswordAsync(string oldPassword, string newPassword);
+        Task<ServiceResult<bool>> RegisterUserAsync(string username, string password);
+        ServiceResult<bool> Logout();
+        Task<ServiceResult<bool>> LoginAsync(string username, string password);
+        Task<ServiceResult<bool>> ChangeStatusAsync(bool isAvailable);
+        Task<ServiceResult<List<User>>> GetAllUsersByUserNameAsync(string userName);
     }
 }

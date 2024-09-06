@@ -17,21 +17,21 @@ namespace BusinessLayer
             _userRepository = userRepository;
         }
 
-        public ServiceResult<bool> RegisterUser(string username, string password)
+        public async Task< ServiceResult<bool>> RegisterUserAsync(string username, string password)
         {
-            if (_userRepository.GetUserByUsername(username) != null)
+            if (await _userRepository.GetUserByUsernameAsync(username) != null)
             {
                 return ServiceResult<bool>.FailureResult("Username already exists.");
             }
 
             var user = new User { Username = username, PasswordHash = HashConverter.SHA256(password) };
-            _userRepository.Add(user);
+            await _userRepository.AddAsync(user);
             return ServiceResult<bool>.SuccessResult(true, "Successfully registered.");
         }
 
-        public ServiceResult<bool> Login(string username, string password)
+        public async Task<ServiceResult<bool>> LoginAsync(string username, string password)
         {
-            var user = _userRepository.GetUserByUsername(username);
+            var user =await _userRepository.GetUserByUsernameAsync(username);
             if (user == null || user.PasswordHash != HashConverter.SHA256(password))
             {
                 return ServiceResult<bool>.FailureResult("Invalid username or password.");
@@ -41,14 +41,14 @@ namespace BusinessLayer
             return ServiceResult<bool>.SuccessResult(true, "You Loged in successfully.");
 
         }
-        public ServiceResult<bool> ChangePassword(string oldPassword, string newPassword)
+        public async Task<ServiceResult<bool>> ChangePasswordAsync(string oldPassword, string newPassword)
         {
             if (_loggedInUser == null)
             {
                 return ServiceResult<bool>.FailureResult("No user is currently logged in.");
             }
 
-            var user = _userRepository.GetUserById(_loggedInUser.ID);
+            var user = await _userRepository.GetUserByIdAsync(_loggedInUser.ID);
             if (user == null)
             {
                 return ServiceResult<bool>.FailureResult("User Not Found.");
@@ -60,7 +60,7 @@ namespace BusinessLayer
             }
 
             user.PasswordHash = HashConverter.SHA256(newPassword);
-            var res = _userRepository.Update(user);
+            var res = await _userRepository.UpdateAsync(user);
             if (res)
             {
                 return ServiceResult<bool>.SuccessResult(true, "Password changed successfully.");
@@ -82,21 +82,21 @@ namespace BusinessLayer
             return ServiceResult<bool>.SuccessResult(true, "Logged out successfully.");
         }
 
-        public ServiceResult<bool> ChangeStatus(bool isAvailable)
+        public async Task<ServiceResult<bool>> ChangeStatusAsync(bool isAvailable)
         {
             if (_loggedInUser == null)
             {
                 return ServiceResult<bool>.FailureResult("No user is currently logged in.");
             }
 
-            var user = _userRepository.GetUserById(_loggedInUser.ID);
+            var user = await _userRepository.GetUserByIdAsync(_loggedInUser.ID);
             if (user == null)
             {
                 return ServiceResult<bool>.FailureResult("User Not Found.");
 
             }
             user.IsAvailable = isAvailable;
-            var res = _userRepository.Update(user);
+            var res = await _userRepository.UpdateAsync(user);
             if (res)
             {
                 return ServiceResult<bool>.SuccessResult(true, "Status changed successfully.");
@@ -106,14 +106,14 @@ namespace BusinessLayer
 
         }
 
-        public ServiceResult<List<User>> GetAllUsersByUserName(string userName)
+        public async Task<ServiceResult<List<User>>> GetAllUsersByUserNameAsync(string userName)
         {
             if (_loggedInUser == null)
             {
                 return ServiceResult<List<User>>.FailureResult("No user is currently logged in.");
             }
 
-            var users = _userRepository.GetAllUsersByUsername(userName);
+            var users =await _userRepository.GetAllUsersByUsernameAsync(userName);
 
             if (users.Count == 0)
             {

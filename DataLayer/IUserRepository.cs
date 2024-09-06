@@ -9,10 +9,10 @@ namespace DataLayer
 {
     public interface IUserRepository
     {  
-       public User? GetUserByUsername(string username);
-       public bool Add(User user);
-       public bool Update(User user);
-       public User? GetUserById(int id);
-       public List<User> GetAllUsersByUsername(string username);
+       Task<User?> GetUserByUsernameAsync(string username);
+       Task<bool> AddAsync(User user);
+       Task<bool> UpdateAsync(User user);
+       Task<User?> GetUserByIdAsync(int id);
+       Task<List<User>> GetAllUsersByUsernameAsync(string username);
     }
 }
